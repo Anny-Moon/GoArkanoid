@@ -1,6 +1,11 @@
 package arkanoid
 
-import "github.com/nsf/termbox-go"
+import (
+    "time"
+    
+    "github.com/nsf/termbox-go"
+)
+
 
 var keyboardEventsChan = make(chan myKeyboardEvent)
 
@@ -14,38 +19,77 @@ var s = scene{
 //var p = makePaddle(10, 25, 10)
 var p = paddle{
     left: 10,
-    y: 25,
+    y: s.top+s.height-1,
     length: 10,
-    leftLimit: 3,
-    rightLimit: 53,
+    leftLimit: s.left-1,
+    rightLimit: s.left+s.width+1,
 }
 
+var b = ball{
+    x: p.left + 1,
+    y: p.y-1,
+    leftLimit: s.left-1,
+    rightLimit: s.left+s.width+1,
+    topLimit: s.top + 1,
+    bottomLimit: s.top+s.height+1,
+}
 
 func redraw(){
     s.draw()
     p.draw()
+    b.draw()
+}
+
+func loopForBall(){
+    for {
+        time.Sleep(time.Millisecond * 10)
+        b.updatePosition()
+        redraw()
+    }
 }
 
 func Start(){
     termbox.Init()
     redraw()
     go listenToKeyboard(keyboardEventsChan)
+    go loopForBall()
 
 mainloop:
-    for{
+   for{
+//       select{
         ch:=<-keyboardEventsChan
-        switch ch.eventType {
-            case MOVE:
-                p.move(keyToDirection(ch.key))
-                redraw()
-            //    d := keyToDirection(e.key)
-            //    g.arena.snake.changeDirection(d)
-            //case RETRY:
-            //    g.retry()
-            case END:
-                break mainloop
-            }    
+            switch ch.eventType {
+                case MOVE:
+                    p.move(keyToDirection(ch.key))
+                    redraw()
+                case END:
+                    break mainloop
+            
+            
+            }
+//        default:
+//                b.updatePosition()
+//                redraw()
+//                time.Sleep(time.Second)
+//        }
     }
+    
+    
+/*    for{
+        //b.updatePosition()
+        redraw()
+        
+        ch:=<-keyboardEventsChan
+            switch ch.eventType {
+                case MOVE:
+                    p.move(keyToDirection(ch.key))
+                    redraw()
+                case END:
+                    break mainloop
+                }
+                
+        
+    }*/
     
     termbox.Close()
 }

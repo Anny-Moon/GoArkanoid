@@ -36,9 +36,13 @@ func (s *scene)draw(){
 
 func (p *paddle)draw(){
     for i := p.left; i < p.left+p.length; i++ {
-        termbox.SetCell(i, p.y-1, 'H', fgColor, paddleColor)
+        termbox.SetCell(i, p.y, 'H', fgColor, paddleColor)
     }
     termbox.Flush()
     //time.Sleep(time.Second * 5);termbox.Close()
 }
 
+func (b *ball)draw(){
+    termbox.SetCell(b.x, b.y, 'o', fgColor, bgColor)
+    termbox.Flush()
+}
