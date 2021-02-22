@@ -1,10 +1,12 @@
 package arkanoid
 
 
-type coord struct{
-    x int
-    y int
-}
+type direction int
+
+const(
+    LEFT direction = 1 + iota
+    RIGHT
+)
 
 type paddle struct{
     left int
@@ -12,6 +14,8 @@ type paddle struct{
     y int
     length int
 }
+
+
 
 func makePaddle (left, y, length int) *paddle {
     p := &paddle{
@@ -21,4 +25,15 @@ func makePaddle (left, y, length int) *paddle {
         length : length,
     }
     return p
+}
+
+func (p *paddle)move(d direction){
+    switch d{
+    case LEFT:
+        p.left--
+        p.right--
+    case RIGHT:
+        p.left++
+        p.right++
+    }
 }

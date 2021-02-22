@@ -1,7 +1,7 @@
 package arkanoid
 
 import(
-    "fmt"
+    //"fmt"
 //    "time"
     "github.com/nsf/termbox-go"
 )
@@ -18,9 +18,7 @@ const (
 )
 
 func drawScene (s *scene){
-    fmt.Printf("Hello1\n")
     
-    termbox.Init()
     
     termbox.Clear(bgColor, bgColor)
     //tbprint(left, top-1, defaultColor, defaultColor, "Snake Game")
