@@ -8,7 +8,7 @@ type scene struct{
     
 }
 
-func MakeScene (left, top, width, height int) *scene{
+func makeScene (left, top, width, height int) *scene{
     s := &scene{
         left: left,
         top: top,

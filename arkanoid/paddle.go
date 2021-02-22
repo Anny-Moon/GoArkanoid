@@ -13,7 +13,7 @@ type paddle struct{
     length int
 }
 
-func MakePaddle (left, y, length int) *paddle {
+func makePaddle (left, y, length int) *paddle {
     p := &paddle{
         left : left,
         right : left + length,

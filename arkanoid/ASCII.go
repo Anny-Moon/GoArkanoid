@@ -2,7 +2,7 @@ package arkanoid
 
 import(
     "fmt"
-    "time"
+//    "time"
     "github.com/nsf/termbox-go"
 )
 
@@ -17,7 +17,7 @@ const (
     snakeColor   = termbox.ColorGreen
 )
 
-func DrawScene (s *scene){
+func drawScene (s *scene){
     fmt.Printf("Hello1\n")
     
     termbox.Init()
@@ -36,10 +36,10 @@ func DrawScene (s *scene){
     
 }
 
-func DrawPaddle (p *paddle){
+func drawPaddle (p *paddle){
     for i := p.left; i < p.left+p.length; i++ {
         termbox.SetCell(i, p.y-1, 'H', fgColor, paddleColor)
     }
     termbox.Flush()
-    time.Sleep(time.Second * 5);termbox.Close()
+    //time.Sleep(time.Second * 5);termbox.Close()
 }
