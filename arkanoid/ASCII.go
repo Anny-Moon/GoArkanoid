@@ -12,29 +12,33 @@ const (
 
     bgColor     = termbox.ColorBlack
     fgColor     = termbox.ColorLightGray
+    paddleColor = termbox.ColorCyan
     
     snakeColor   = termbox.ColorGreen
 )
 
-func DrawScene (s *scene, left, top int){
+func DrawScene (s *scene){
     fmt.Printf("Hello1\n")
     
-    var (
-    IsInit bool = false
-    )
     termbox.Init()
-    fmt.Println(IsInit)
     
     termbox.Clear(bgColor, bgColor)
     //tbprint(left, top-1, defaultColor, defaultColor, "Snake Game")
-    for i := top; i < top+s.height; i++ {
-        termbox.SetCell(left-1, i, '|', fgColor, bgColor)
-        termbox.SetCell(left+s.width, i, '|', fgColor, bgColor)
+    for i := s.top; i < s.top+s.height; i++ {
+        termbox.SetCell(s.left-1, i, '|', fgColor, bgColor)
+        termbox.SetCell(s.left+s.width, i, '|', fgColor, bgColor)
     }
     
-    for i := left; i < left+s.width; i++ {
-        termbox.SetCell(i, top-1, '_', fgColor, bgColor)
-        termbox.SetCell(i, top+s.height, '^', fgColor, bgColor)
+    for i := s.left; i < s.left+s.width; i++ {
+        termbox.SetCell(i, s.top-1, '_', fgColor, bgColor)
+        termbox.SetCell(i, s.top+s.height, '^', fgColor, bgColor)
+    }
+    
+}
+
+func DrawPaddle (p *paddle){
+    for i := p.left; i < p.left+p.length; i++ {
+        termbox.SetCell(i, p.y-1, 'H', fgColor, paddleColor)
     }
     termbox.Flush()
     time.Sleep(time.Second * 5);termbox.Close()

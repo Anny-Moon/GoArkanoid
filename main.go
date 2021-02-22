@@ -6,6 +6,9 @@ import(
 
 func main(){
 
-    s := arkanoid.MakeScene(10, 10)
-    arkanoid.DrawScene(s, 3,5)
+    s := arkanoid.MakeScene(3, 5, 50, 20)
+    arkanoid.DrawScene(s)
+    
+    p := arkanoid.MakePaddle(10, 25, 10)
+    arkanoid.DrawPaddle(p)
 }
