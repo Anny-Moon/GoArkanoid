@@ -10,9 +10,10 @@ const(
 
 type paddle struct{
     left int
-    right int
     y int
     length int
+    leftLimit int
+    rightLimit int
 }
 
 
@@ -20,9 +21,10 @@ type paddle struct{
 func makePaddle (left, y, length int) *paddle {
     p := &paddle{
         left : left,
-        right : left + length,
         y : y,
         length : length,
+        //leftLimit : leftLimit,
+        //rightLimit : rightLimit,
     }
     return p
 }
@@ -30,10 +32,12 @@ func makePaddle (left, y, length int) *paddle {
 func (p *paddle)move(d direction){
     switch d{
     case LEFT:
-        p.left--
-        p.right--
+        if p.left-1 > p.leftLimit{
+            p.left--
+        }
     case RIGHT:
-        p.left++
-        p.right++
+        if p.left+p.length+1 < p.rightLimit{
+            p.left++
+        }
     }
 }

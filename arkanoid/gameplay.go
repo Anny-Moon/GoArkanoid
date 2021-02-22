@@ -4,14 +4,31 @@ import "github.com/nsf/termbox-go"
 
 var keyboardEventsChan = make(chan myKeyboardEvent)
 
-var s = makeScene(3, 5, 50, 20)
-var p = makePaddle(10, 25, 10)
+//var s = makeScene(3, 5, 50, 20)
+var s = scene{
+    left: 3,
+    top: 5,
+    width: 50,
+    height: 20,
+}
+//var p = makePaddle(10, 25, 10)
+var p = paddle{
+    left: 10,
+    y: 25,
+    length: 10,
+    leftLimit: 3,
+    rightLimit: 53,
+}
+
+
+func redraw(){
+    s.draw()
+    p.draw()
+}
 
 func Start(){
     termbox.Init()
-    drawScene(s)
-    drawPaddle(p)
-    
+    redraw()
     go listenToKeyboard(keyboardEventsChan)
 
 mainloop:
@@ -20,8 +37,7 @@ mainloop:
         switch ch.eventType {
             case MOVE:
                 p.move(keyToDirection(ch.key))
-                drawScene(s)
-                drawPaddle(p)
+                redraw()
             //    d := keyToDirection(e.key)
             //    g.arena.snake.changeDirection(d)
             //case RETRY:

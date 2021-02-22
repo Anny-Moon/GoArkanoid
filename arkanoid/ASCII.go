@@ -17,7 +17,7 @@ const (
     snakeColor   = termbox.ColorGreen
 )
 
-func drawScene (s *scene){
+func (s *scene)draw(){
     
     
     termbox.Clear(bgColor, bgColor)
@@ -34,10 +34,11 @@ func drawScene (s *scene){
     
 }
 
-func drawPaddle (p *paddle){
+func (p *paddle)draw(){
     for i := p.left; i < p.left+p.length; i++ {
         termbox.SetCell(i, p.y-1, 'H', fgColor, paddleColor)
     }
     termbox.Flush()
     //time.Sleep(time.Second * 5);termbox.Close()
 }
+
