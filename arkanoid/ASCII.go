@@ -23,8 +23,8 @@ func (s *scene)draw(){
     termbox.Clear(bgColor, bgColor)
     //tbprint(left, top-1, defaultColor, defaultColor, "Snake Game")
     for i := s.top; i < s.top+s.height; i++ {
-        termbox.SetCell(s.left-1, i, '|', fgColor, bgColor)
-        termbox.SetCell(s.left+s.width, i, '|', fgColor, bgColor)
+        termbox.SetCell(s.left-1, i, '|', fgColor, fgColor)
+        termbox.SetCell(s.left+s.width, i, '|', fgColor, fgColor)
     }
     
     for i := s.left; i < s.left+s.width; i++ {

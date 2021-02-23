@@ -2,7 +2,7 @@ package arkanoid
 
 import (
     "time"
-    
+    "fmt"
     "github.com/nsf/termbox-go"
 )
 
@@ -13,7 +13,7 @@ var keyboardEventsChan = make(chan myKeyboardEvent)
 var s = scene{
     left: 3,
     top: 5,
-    width: 50,
+    width: 60,
     height: 20,
 }
 //var p = makePaddle(10, 25, 10)
@@ -32,6 +32,8 @@ var b = ball{
     rightLimit: s.left+s.width+1,
     topLimit: s.top + 1,
     bottomLimit: s.top+s.height+1,
+    vx: 1.5,
+    vy: -1,
 }
 
 func redraw(){
@@ -42,8 +44,8 @@ func redraw(){
 
 func loopForBall(){
     for {
-        time.Sleep(time.Millisecond * 10)
-        b.updatePosition()
+        time.Sleep(time.Millisecond * 200)
+        b.updatePosition(&p)
         redraw()
     }
 }
@@ -92,4 +94,5 @@ mainloop:
     }*/
     
     termbox.Close()
+    fmt.Println(b.vx, b.vy)
 }
