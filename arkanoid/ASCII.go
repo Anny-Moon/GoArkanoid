@@ -37,7 +37,7 @@ func (s *scene)draw(){
 func (s *scene)clearScene(){
     for j := s.left-1; j < s.left+s.width +1; j++ {
         for i := s.top-1; i < s.top+s.height+1; i++ {
-            termbox.SetCell(j, i, ' ', bgColor, redColor)
+            termbox.SetCell(j, i, ' ', bgColor, bgColor)
         }
     }
 }

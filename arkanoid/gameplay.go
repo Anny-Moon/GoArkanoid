@@ -13,14 +13,14 @@ var keyboardEventsChan = make(chan myKeyboardEvent)
 var s = scene{
     left: 3,
     top: 5,
-    width: 33,
-    height: 14,
+    width: 50,
+    height: 50,
 }
 //var p = makePaddle(10, 25, 10)
 var p = paddle{
     left: 10,
     y: s.top+s.height-1,
-    length: 10,
+    length: 20,
     leftLimit: s.left-1,
     rightLimit: s.left+s.width+1,
 }
@@ -32,8 +32,8 @@ var b = ball{
     rightLimit: s.left+s.width+1,
     topLimit: s.top + 1,
     bottomLimit: s.top+s.height+1,
-    vx: 1,
-    vy: -0.5,
+    vx: 3,
+    vy: -2,
 }
 
 func redraw(){

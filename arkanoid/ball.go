@@ -99,7 +99,7 @@ func(b *ball) updatePosition(p *paddle){
     xNew := b.x + b.vx * dt
     yNew := b.y + b.vy * dt
     
-    if int(yNew) == p.y{
+    if int(yNew) >= p.y{
         for i := 0; i < p.length+1; i++ {
             if int(xNew) == p.left+i{
                 
