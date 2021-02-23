@@ -1,14 +1,15 @@
 package arkanoid
 
-//import "math"
+import "fmt"
+import "math"
 //import "time"
 
 const(
     dt float64 = 1
-    //cos = 0.87 // 30 grad
-    //sin = 0.5 // 30 grad
-    cos = 0 // 30 grad
-    sin = 1 // 30 grad
+    cos float64 = 0.17 // 30 grad
+    sin float64 = -0.98 // 30 grad
+    //cos float64 = 0 // 90 grad
+    //sin float64 = -1 // 90 grad
 )
 
 type ball struct{
@@ -33,21 +34,66 @@ func (b *ball) reflectFromPaddleMiddle(){
     b.vy = -b.vy
 }
 
-func (b *ball) reflectFromPaddleRightEnd(){
+/*func (b *ball) reflectFromPaddleRightEnd(){
+    b.vy = -b.vy
     vxNew := b.vx * cos + b.vy * sin
     vyNew := -b.vx * sin + b.vy * cos
     b.vx = vxNew
-    b.vy = -vyNew
+    b.vy = vyNew
 
 }
-func (b *ball) reflectFromPaddleLeftEnd(){
+*/
+
+func (b *ball) reflectFromPaddleRightEnd(){
+    vxNew := b.vx - 2.0*(cos*b.vx + sin*b.vy)*cos
+    vyNew := b.vy - 2.0*(cos*b.vx + sin*b.vy)*sin
+    b.vx = vxNew
+    b.vy = vyNew
+}
+
+/*func (b *ball) reflectFromPaddleLeftEnd(){
+    b.vy = -b.vy
     vxNew := b.vx * cos - b.vy * sin
     vyNew := b.vx * sin + b.vy * cos
     b.vx = vxNew
-    b.vy = - vyNew
+    b.vy = vyNew
+}
+*/
 
+func (b *ball) reflectFromPaddleLeftEnd(){
+    nx := -cos
+    ny := sin
+    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+    vxNew := b.vx - 2.0*(nx*b.vx + ny*b.vy)*nx
+    vyNew := b.vy - 2.0*(nx*b.vx + ny*b.vy)*ny
+    b.vx = vxNew
+    b.vy = vyNew
+    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
 }
 
+func (b *ball) reflectFromPaddle(nx, ny float64){
+    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+    vxNew := b.vx - 2.0*(nx*b.vx + ny*b.vy)*nx
+    vyNew := b.vy - 2.0*(nx*b.vx + ny*b.vy)*ny
+    b.vx = vxNew
+    b.vy = vyNew
+    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+}
+
+func (b *ball) correctVelocity(){
+    v := math.Sqrt(b.vx*b.vx + b.vy*b.vy)
+    if b.vx/math.Abs(b.vy) > 1.74{
+        b.vx = v * 0.87
+        b.vy = v * (-0.5)
+    } else if b.vx/math.Abs(b.vy) < -1.74{
+        b.vx = -v * 0.87
+        b.vy = v * (-0.5)
+    }
+}
 
 func(b *ball) updatePosition(p *paddle){
     xNew := b.x + b.vx * dt
@@ -59,14 +105,15 @@ func(b *ball) updatePosition(p *paddle){
                 
                 if i < p.zone[0]{
                     tbprint(0,1, "left")
-                    b.reflectFromPaddleLeftEnd()
+                    b.reflectFromPaddle(-cos, sin)
                 } else if i >= p.zone[1]{
-                    b.reflectFromPaddleRightEnd()
+                    b.reflectFromPaddle(cos, sin)
                     tbprint(0,1, "righ")
                 } else{
-                    b.reflectFromPaddleMiddle()
+                    b.reflectFromPaddle(0, -1)
                     tbprint(0,1, "midd")
                 }
+                b.correctVelocity()
             }
         }
     } else if int(yNew) < b.topLimit-1{

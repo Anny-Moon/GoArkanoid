@@ -33,8 +33,8 @@ func makePaddle (left, y, length int) *paddle {
 */
 
 func (p *paddle) makeZones(){
-    //zoneLength := int(p.length/3)
-    zoneLength:=5
+    zoneLength := int(p.length/3)
+    //zoneLength:=3
     tbprint(0,2,"hi")
     tbprint(0,2,string(zoneLength))
     p.zone[0] = zoneLength

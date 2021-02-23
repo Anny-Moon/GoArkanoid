@@ -13,8 +13,8 @@ var keyboardEventsChan = make(chan myKeyboardEvent)
 var s = scene{
     left: 3,
     top: 5,
-    width: 30,
-    height: 10,
+    width: 33,
+    height: 14,
 }
 //var p = makePaddle(10, 25, 10)
 var p = paddle{
