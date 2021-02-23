@@ -5,11 +5,15 @@ package arkanoid
 
 const(
     dt float64 = 1
+    //cos = 0.87 // 30 grad
+    //sin = 0.5 // 30 grad
+    cos = 0 // 30 grad
+    sin = 1 // 30 grad
 )
 
 type ball struct{
-    x int
-    y int
+    x float64
+    y float64
     leftLimit int
     rightLimit int
     topLimit int
@@ -25,40 +29,58 @@ func (b *ball) inverseVY(){
     b.vy = -b.vy
 }
 
+func (b *ball) reflectFromPaddleMiddle(){
+    b.vy = -b.vy
+}
+
+func (b *ball) reflectFromPaddleRightEnd(){
+    vxNew := b.vx * cos + b.vy * sin
+    vyNew := -b.vx * sin + b.vy * cos
+    b.vx = vxNew
+    b.vy = -vyNew
+
+}
+func (b *ball) reflectFromPaddleLeftEnd(){
+    vxNew := b.vx * cos - b.vy * sin
+    vyNew := b.vx * sin + b.vy * cos
+    b.vx = vxNew
+    b.vy = - vyNew
+
+}
+
 
 func(b *ball) updatePosition(p *paddle){
-    //var r float64 = math.Sqrt(float64(b.x*b.x + b.y*b.y))
-    xNew := int(float64(b.x) + b.vx * dt)
-    yNew := int(float64(b.y) + b.vy * dt)
+    xNew := b.x + b.vx * dt
+    yNew := b.y + b.vy * dt
     
-    if yNew < b.topLimit-1{
-        b.inverseVY()
-        xNew = int(float64(b.x) + b.vx * dt)
-        yNew = int(float64(b.y) + b.vy * dt)
-    }
-    
-    if yNew == p.y{
+    if int(yNew) == p.y{
         for i := 0; i < p.length+1; i++ {
-            if xNew == p.left+i{
-                b.inverseVY()
-                xNew = int(float64(b.x) + b.vx * dt)
-                yNew = int(float64(b.y) + b.vy * dt)
+            if int(xNew) == p.left+i{
+                
+                if i < p.zone[0]{
+                    tbprint(0,1, "left")
+                    b.reflectFromPaddleLeftEnd()
+                } else if i >= p.zone[1]{
+                    b.reflectFromPaddleRightEnd()
+                    tbprint(0,1, "righ")
+                } else{
+                    b.reflectFromPaddleMiddle()
+                    tbprint(0,1, "midd")
+                }
             }
         }
+    } else if int(yNew) < b.topLimit-1{
+        b.inverseVY()
     }
     
-    if xNew < b.leftLimit+1{
+    if int(xNew) < b.leftLimit+1{
         b.inverseVX()
-        xNew = int(float64(b.x) + b.vx * dt)
-        yNew = int(float64(b.y) + b.vy * dt)
-    }
-    
-    if xNew > b.rightLimit-2{
+    } else if int(xNew) > b.rightLimit-2{
         b.inverseVX()
-        xNew = int(float64(b.x) + b.vx * dt)
-        yNew = int(float64(b.y) + b.vy * dt)
     }
     
+    xNew = b.x + b.vx * dt
+    yNew = b.y + b.vy * dt
     b.x = xNew
     b.y = yNew
 }

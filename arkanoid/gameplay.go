@@ -13,8 +13,8 @@ var keyboardEventsChan = make(chan myKeyboardEvent)
 var s = scene{
     left: 3,
     top: 5,
-    width: 60,
-    height: 20,
+    width: 30,
+    height: 10,
 }
 //var p = makePaddle(10, 25, 10)
 var p = paddle{
@@ -26,17 +26,18 @@ var p = paddle{
 }
 
 var b = ball{
-    x: p.left + 1,
-    y: p.y-1,
+    x: float64(p.left + 1),
+    y: float64(p.y-1),
     leftLimit: s.left-1,
     rightLimit: s.left+s.width+1,
     topLimit: s.top + 1,
     bottomLimit: s.top+s.height+1,
-    vx: 1.5,
-    vy: -1,
+    vx: 1,
+    vy: -0.5,
 }
 
 func redraw(){
+    s.clearScene()
     s.draw()
     p.draw()
     b.draw()
@@ -44,14 +45,18 @@ func redraw(){
 
 func loopForBall(){
     for {
-        time.Sleep(time.Millisecond * 200)
+        time.Sleep(time.Millisecond * 100)
         b.updatePosition(&p)
         redraw()
     }
 }
 
 func Start(){
+    p.makeZones()
     termbox.Init()
+        
+    termbox.Clear(bgColor, bgColor)
+    tbprint(0,0, "hello")
     redraw()
     go listenToKeyboard(keyboardEventsChan)
     go loopForBall()
@@ -92,7 +97,10 @@ mainloop:
                 
         
     }*/
+    //tbprint(0,0, "bye")
+    //time.Sleep(time.Second)
     
+    termbox.Clear(bgColor, bgColor)
     termbox.Close()
     fmt.Println(b.vx, b.vy)
 }

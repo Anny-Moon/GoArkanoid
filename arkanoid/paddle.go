@@ -3,6 +3,7 @@ package arkanoid
 
 type direction int
 
+
 const(
     LEFT direction = 1 + iota
     RIGHT
@@ -14,10 +15,11 @@ type paddle struct{
     length int
     leftLimit int
     rightLimit int
+    zone [2]int
 }
 
 
-
+/*
 func makePaddle (left, y, length int) *paddle {
     p := &paddle{
         left : left,
@@ -27,6 +29,16 @@ func makePaddle (left, y, length int) *paddle {
         //rightLimit : rightLimit,
     }
     return p
+}
+*/
+
+func (p *paddle) makeZones(){
+    //zoneLength := int(p.length/3)
+    zoneLength:=5
+    tbprint(0,2,"hi")
+    tbprint(0,2,string(zoneLength))
+    p.zone[0] = zoneLength
+    p.zone[1] = p.length - zoneLength
 }
 
 func (p *paddle)move(d direction){
