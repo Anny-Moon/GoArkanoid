@@ -13,14 +13,14 @@ var keyboardEventsChan = make(chan myKeyboardEvent)
 var s = scene{
     left: 3,
     top: 5,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 16,
 }
 //var p = makePaddle(10, 25, 10)
 var p = paddle{
     left: 10,
     y: s.top+s.height-1,
-    length: 20,
+    length: 10,
     leftLimit: s.left-1,
     rightLimit: s.left+s.width+1,
 }
@@ -32,8 +32,8 @@ var b = ball{
     rightLimit: s.left+s.width+1,
     topLimit: s.top + 1,
     bottomLimit: s.top+s.height+1,
-    vx: 3,
-    vy: -2,
+    vx: 0.3,
+    vy: -1.0,
 }
 
 func redraw(){
@@ -56,14 +56,13 @@ func Start(){
     termbox.Init()
         
     termbox.Clear(bgColor, bgColor)
-    tbprint(0,0, "hello")
+    //tbprint(0,0, "hello")
     redraw()
     go listenToKeyboard(keyboardEventsChan)
     go loopForBall()
 
 mainloop:
    for{
-//       select{
         ch:=<-keyboardEventsChan
             switch ch.eventType {
                 case MOVE:
@@ -74,31 +73,7 @@ mainloop:
             
             
             }
-//        default:
-//                b.updatePosition()
-//                redraw()
-//                time.Sleep(time.Second)
-//        }
     }
-    
-    
-/*    for{
-        //b.updatePosition()
-        redraw()
-        
-        ch:=<-keyboardEventsChan
-            switch ch.eventType {
-                case MOVE:
-                    p.move(keyToDirection(ch.key))
-                    redraw()
-                case END:
-                    break mainloop
-                }
-                
-        
-    }*/
-    //tbprint(0,0, "bye")
-    //time.Sleep(time.Second)
     
     termbox.Clear(bgColor, bgColor)
     termbox.Close()

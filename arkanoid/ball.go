@@ -1,6 +1,6 @@
 package arkanoid
 
-import "fmt"
+//import "fmt"
 import "math"
 //import "time"
 
@@ -11,6 +11,8 @@ const(
     //cos float64 = 0 // 90 grad
     //sin float64 = -1 // 90 grad
 )
+
+var isLost bool = false
 
 type ball struct{
     x float64
@@ -34,16 +36,6 @@ func (b *ball) reflectFromPaddleMiddle(){
     b.vy = -b.vy
 }
 
-/*func (b *ball) reflectFromPaddleRightEnd(){
-    b.vy = -b.vy
-    vxNew := b.vx * cos + b.vy * sin
-    vyNew := -b.vx * sin + b.vy * cos
-    b.vx = vxNew
-    b.vy = vyNew
-
-}
-*/
-
 func (b *ball) reflectFromPaddleRightEnd(){
     vxNew := b.vx - 2.0*(cos*b.vx + sin*b.vy)*cos
     vyNew := b.vy - 2.0*(cos*b.vx + sin*b.vy)*sin
@@ -51,37 +43,28 @@ func (b *ball) reflectFromPaddleRightEnd(){
     b.vy = vyNew
 }
 
-/*func (b *ball) reflectFromPaddleLeftEnd(){
-    b.vy = -b.vy
-    vxNew := b.vx * cos - b.vy * sin
-    vyNew := b.vx * sin + b.vy * cos
-    b.vx = vxNew
-    b.vy = vyNew
-}
-*/
-
 func (b *ball) reflectFromPaddleLeftEnd(){
     nx := -cos
     ny := sin
-    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
-    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+//    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+//    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
     vxNew := b.vx - 2.0*(nx*b.vx + ny*b.vy)*nx
     vyNew := b.vy - 2.0*(nx*b.vx + ny*b.vy)*ny
     b.vx = vxNew
     b.vy = vyNew
-    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
-    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+//    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+//    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
 }
 
 func (b *ball) reflectFromPaddle(nx, ny float64){
-    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
-    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+//    tbprint(0,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+//    tbprint(0,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
     vxNew := b.vx - 2.0*(nx*b.vx + ny*b.vy)*nx
     vyNew := b.vy - 2.0*(nx*b.vx + ny*b.vy)*ny
     b.vx = vxNew
     b.vy = vyNew
-    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
-    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
+//    tbprint(60,2,fmt.Sprintf("v: %f; %f", b.vx, b.vy))
+//    tbprint(60,3,fmt.Sprintf("n: %f; %f\t",nx, ny))
 }
 
 func (b *ball) correctVelocity(){
@@ -96,24 +79,31 @@ func (b *ball) correctVelocity(){
 }
 
 func(b *ball) updatePosition(p *paddle){
+    if isLost{
+        return
+    }
+    
     xNew := b.x + b.vx * dt
     yNew := b.y + b.vy * dt
     
     if int(yNew) >= p.y{
         for i := 0; i < p.length+1; i++ {
             if int(xNew) == p.left+i{
-                
                 if i < p.zone[0]{
-                    tbprint(0,1, "left")
+                    //tbprint(0,1, "left")
                     b.reflectFromPaddle(-cos, sin)
                 } else if i >= p.zone[1]{
+                    //tbprint(0,1, "righ")
                     b.reflectFromPaddle(cos, sin)
-                    tbprint(0,1, "righ")
                 } else{
+                    //tbprint(0,1, "midd")
                     b.reflectFromPaddle(0, -1)
-                    tbprint(0,1, "midd")
                 }
                 b.correctVelocity()
+            } else {
+                if int(yNew) > p.y{
+                    isLost = true
+                }
             }
         }
     } else if int(yNew) < b.topLimit-1{
@@ -125,6 +115,9 @@ func(b *ball) updatePosition(p *paddle){
     } else if int(xNew) > b.rightLimit-2{
         b.inverseVX()
     }
+    
+
+    
     
     xNew = b.x + b.vx * dt
     yNew = b.y + b.vy * dt
